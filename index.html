@@ -1,0 +1,100 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Tinder Homemade</title>
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+    <div id="homePage" class="toggle-content is-visible">
+        <h1 class="tinder">
+            TINDER
+        </h1>
+        <img src="img/images.jpg" alt="Heart" class="center">
+        <br> <br>
+        <a id="createPageAcccountCreation">
+            <button class="btn"> Create an account </button>
+        </a>
+    </div>
+
+    <div id="createPage" class="toggle-content">
+        <form>
+            <div id="tinderFormUser" class="tform">
+                <h1>
+                    Create an account
+                </h1>
+                <p> Please fill in to create an account </p>
+                <hr />
+                <label>Firstname</label>
+                <input type="text" placeholder="Firstname" required />
+                <br> <br>
+                <label>Lastname</label>
+                <input type="text" placeholder="Lastname" required />
+                <br>
+                <label for="birthdate">Birthdate</label>
+                <input type="date" id="birthdate" name="birthdate" required>
+                <br>
+                <label>City</label>
+                <input type="text" placeholder="City" required />
+                <br>
+                <label>Country</label>
+                <input type="text" placeholder="Country" required />
+                <br>
+                <label>Email</label>
+                <input type="text" placeholder="Email" required />
+                <br> <br>
+
+                <button id="registerbutton" class="registerbutton"> Create account </button>
+            </div>
+        </form>
+    </div>
+
+    <div id="helloPage" class="toggle-content">
+        <form>
+            <div id="helloPageForm" class="tform">
+                <h1>
+                    Preferences
+                </h1>
+                <hr />
+                <label>Name</label>
+                <input type="text" placeholder="Name" required />
+                <br> <br>
+                <label>Gender</label>
+                <input type="text" placeholder="Gender" required />
+                <br>
+                <label>Preferred gender</label>
+                <input type="text" placeholder="Preferred gender" required />
+                <br>
+                <button id="helloPageButton" class="registerbutton"> Set preferences </button>
+            </div>
+        </form>
+    </div>
+
+    <div id="swipePage" class="toggle-content">
+        <p class="tinder">Swipe Page</p>
+        <img class="center" src="img/images2.jpg">
+        <br> <br>
+        <p class="swipebutton" id="currentSwipeName"></p>
+        <p class="swipebutton" id="currentSwipeAge"></p>
+        <button class="dislike" id="swipePageDislike"> DISLIKE </button>
+        <button class="like" id="swipePageLike"> LIKE </button>
+    </div>
+    <div id="result" class="toggle-content">
+        <img class="center" src="img/images.jpg">
+        <h2 class="tinder2">liked</h2>
+        <ul class="liked" id="likedPeople">
+        </ul>
+        <h2 class="tinder2">disliked</h2>
+        <ul class="liked" id="dislikedPeople">
+        </ul>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
+<!-- <div class="toggle-content is-visible">Hello je suis le premier paragraph</div> -->
