@@ -23,6 +23,8 @@ createPageAcccountCreation.addEventListener('click', () => {
     show(createPage);
 });
 
+var BACKEND_URL = location.hostname === "localhost" ? "http://localhost:4040" : "https://aqueous-harbor-80633.herokuapp.com/" ; 
+
 // CREATEPAGE scripts 
 var registerbutton = document.getElementById('registerbutton');
 registerbutton.addEventListener('click', (e) => {
@@ -32,7 +34,8 @@ registerbutton.addEventListener('click', (e) => {
     var isBirthdayValid = Object.prototype.toString.call(new Date(allInputs[2])) === "[object Date]";
     var allFieldsHaveInput = allInputs.filter(Boolean).length === 6;
     if (isBirthdayValid && allFieldsHaveInput) {
-        fetch('http://localhost:4040/users/new', {
+
+        fetch(BACKEND_URL + 'users/new', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -77,7 +80,7 @@ helloPageButton.addEventListener('click', (e) => {
         sessionStorage.setItem("name", allInputs[0]);
         sessionStorage.setItem("gender", allInputs[1]);
         sessionStorage.setItem("preferredGender", allInputs[2]);
-        fetch("http://localhost:4040/users/users").then(response => response.json()).then(data => {
+        fetch(BACKEND_URL +"users/users").then(response => response.json()).then(data => {
             sessionStorage.setItem("people", JSON.stringify(data.data.filter(x => x.Gender.toString().toLowerCase() === allInputs[2].toLowerCase())));
             setInfo();
         });
