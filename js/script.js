@@ -119,7 +119,7 @@ function setInfo() {
         var cur = new Date();
         var diff = cur - birthtimestamp;
         var currentAge = Math.floor(diff/31557600000);
-        document.getElementById('currentSwipeName').innerHTML = currentguy.username;
+        document.getElementById('currentSwipeName').innerHTML = currentguy.firstname;
         document.getElementById('currentSwipeAge').innerHTML = currentAge;
     }
 }
