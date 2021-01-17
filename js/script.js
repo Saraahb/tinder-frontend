@@ -89,7 +89,7 @@ helloPageButton.addEventListener('click', (e) => {
                 id: sessionStorage.getItem('user_id'),
             })
         }).then(resp => {
-            fetch("http://localhost:4040/users/users", {
+            fetch(BACKEND_URL +"users/users", {
                 "credentials": "omit",
                 "headers": {
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0",
@@ -126,7 +126,7 @@ function setInfo() {
 
 function swipeHandler() {
     if (currentIndexOfSwipes === JSON.parse(sessionStorage.getItem("peopleToLike")).length) {
-        fetch("http://localhost:4040/users/liked", {
+        fetch(BACKEND_URL +"users/liked", {
             "credentials": "omit",
             "headers": {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0",
@@ -141,7 +141,7 @@ function swipeHandler() {
         .then(data => {
             sessionStorage.setItem('liked' , JSON.stringify(data.data))
         })
-        fetch("http://localhost:4040/users/disliked", {
+        fetch(BACKEND_URL + "users/disliked", {
             "credentials": "omit",
             "headers": {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0",
@@ -183,7 +183,7 @@ like.addEventListener('click', (e) => {
     if (currentIndexOfSwipes !== JSON.parse(sessionStorage.getItem("peopleToLike")).length) {
         var currentguy = JSON.parse(sessionStorage.getItem("peopleToLike"))[currentIndexOfSwipes];
         addToList(JSON.parse(sessionStorage.getItem("peopleToLike"))[currentIndexOfSwipes].firstname, "likedPeople");
-        fetch("http://localhost:4040/users/swipe", {
+        fetch(BACKEND_URL + "users/swipe", {
                 "credentials": "omit",
                 "headers": {
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0",
