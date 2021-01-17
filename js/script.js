@@ -23,7 +23,7 @@ createPageAcccountCreation.addEventListener('click', () => {
     show(createPage);
 });
 
-var BACKEND_URL = location.hostname === "localhost" ? "http://localhost:4040" : "https://aqueous-harbor-80633.herokuapp.com/" ; 
+var BACKEND_URL = location.pathname === "\/C:\/Users\/p51\/Developer\/tinder-frontend\/index.html" ? "http://localhost:4040/" : "https://aqueous-harbor-80633.herokuapp.com/";
 
 // CREATEPAGE scripts 
 var registerbutton = document.getElementById('registerbutton');
@@ -34,24 +34,24 @@ registerbutton.addEventListener('click', (e) => {
     var isBirthdayValid = Object.prototype.toString.call(new Date(allInputs[2])) === "[object Date]";
     var allFieldsHaveInput = allInputs.filter(Boolean).length === 6;
     if (isBirthdayValid && allFieldsHaveInput) {
-
         fetch(BACKEND_URL + 'users/new', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    firstname: allInputs[0],
-                    lastname: allInputs[1],
-                    birthdate: allInputs[2],
-                    city: allInputs[3],
-                    country: allInputs[4],
-                    email: allInputs[5],
-                })
-            }).then(response => response.json())
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                firstname: allInputs[0],
+                lastname: allInputs[1],
+                birthdate: allInputs[2],
+                city: allInputs[3],
+                country: allInputs[4],
+                email: allInputs[5],
+            })
+        }).then(response => response.json())
             .then(data => {
                 if (data.status === 200) {
+                    sessionStorage.setItem('user_id', data.id);
                     var createPage = document.getElementById("createPage");
                     var helloPage = document.getElementById("helloPage");
                     hide(createPage);
@@ -76,37 +76,91 @@ helloPageButton.addEventListener('click', (e) => {
         var helloPage = document.getElementById("helloPage");
         var swipePage = document.getElementById("swipePage");
         hide(helloPage);
-        show(swipePage);
-        sessionStorage.setItem("name", allInputs[0]);
-        sessionStorage.setItem("gender", allInputs[1]);
-        sessionStorage.setItem("preferredGender", allInputs[2]);
-        fetch(BACKEND_URL +"users/users").then(response => response.json()).then(data => {
-            sessionStorage.setItem("people", JSON.stringify(data.data.filter(x => x.Gender.toString().toLowerCase() === allInputs[2].toLowerCase())));
-            setInfo();
-        });
+        fetch(BACKEND_URL + "users/setgender", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: allInputs[0],
+                gender: allInputs[1],
+                preferredgender: allInputs[2],
+                id: sessionStorage.getItem('user_id'),
+            })
+        }).then(resp => {
+            fetch("http://localhost:4040/users/users", {
+                "credentials": "omit",
+                "headers": {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0",
+                    "Accept": "application/json",
+                    "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                    "Content-Type": "application/json"
+                },
+                "body": "{\"id\":\"" + Number.parseInt(sessionStorage.getItem('user_id')) +"\"\}",
+                "method": "POST",
+                "mode": "cors"
+            }).then(response => response.json())
+            .then(data => {
+                sessionStorage.setItem('peopleToLike' , JSON.stringify(data.data))
+                show(swipePage);
+                setInfo();
+            })
+        })
     }
 });
 
 var currentIndexOfSwipes = 0;
-var likedPeople = [],
-    dislikedPeople = [];
-
 function setInfo() {
-    if (currentIndexOfSwipes !== JSON.parse(sessionStorage.getItem("people")).length) {
-        var currentguy = JSON.parse(sessionStorage.getItem("people"))[currentIndexOfSwipes];
-        document.getElementById('currentSwipeName').innerHTML = currentguy.NameOfPeople;
-        document.getElementById('currentSwipeAge').innerHTML = currentguy.Age;
+    if (currentIndexOfSwipes !== JSON.parse(sessionStorage.getItem("peopleToLike")).length) {
+        var currentguy = JSON.parse(sessionStorage.getItem("peopleToLike"))[currentIndexOfSwipes];
+        var from= currentguy.birthdate.split('/')
+        var birthtimestamp = new Date(from[2], from[1] - 1, from[0]);
+        var cur = new Date();
+        var diff = cur - birthtimestamp;
+        var currentAge = Math.floor(diff/31557600000);
+        document.getElementById('currentSwipeName').innerHTML = currentguy.username;
+        document.getElementById('currentSwipeAge').innerHTML = currentAge;
     }
 }
 
 function swipeHandler() {
-    if (currentIndexOfSwipes === JSON.parse(sessionStorage.getItem("people")).length) {
+    if (currentIndexOfSwipes === JSON.parse(sessionStorage.getItem("peopleToLike")).length) {
+        fetch("http://localhost:4040/users/liked", {
+            "credentials": "omit",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0",
+                "Accept": "application/json",
+                "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                "Content-Type": "application/json"
+            },
+            "body": "{\"id\":\"" + Number.parseInt(sessionStorage.getItem('user_id')) +"\"\}",
+            "method": "POST",
+            "mode": "cors"
+        }).then(response => response.json())
+        .then(data => {
+            sessionStorage.setItem('liked' , JSON.stringify(data.data))
+        })
+        fetch("http://localhost:4040/users/disliked", {
+            "credentials": "omit",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0",
+                "Accept": "application/json",
+                "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                "Content-Type": "application/json"
+            },
+            "body": "{\"id\":\"" + Number.parseInt(sessionStorage.getItem('user_id')) +"\"\}",
+            "method": "POST",
+            "mode": "cors"
+        }).then(response => response.json())
+        .then(data => {
+            sessionStorage.setItem('disliked' , JSON.stringify(data.data))
+        })
         var helloPresultage = document.getElementById("result");
         var swipePage = document.getElementById("swipePage");
         hide(swipePage);
         show(result);
     } else {
-
         currentIndexOfSwipes += 1;
         setInfo();
     }
@@ -114,9 +168,10 @@ function swipeHandler() {
 var dislike = document.getElementById('swipePageDislike');
 dislike.addEventListener('click', (e) => {
     e.preventDefault();
-    if (currentIndexOfSwipes !== JSON.parse(sessionStorage.getItem("people")).length) {
-        addToList(JSON.parse(sessionStorage.getItem("people"))[currentIndexOfSwipes].NameOfPeople, "dislikedPeople");
-        dislikedPeople.push(JSON.parse(sessionStorage.getItem("people"))[currentIndexOfSwipes])
+    if (currentIndexOfSwipes !== JSON.parse(sessionStorage.getItem("peopleToLike")).length) {
+        // var currentguy = JSON.parse(sessionStorage.getItem("peopleToLike"))[currentIndexOfSwipes];
+        addToList(JSON.parse(sessionStorage.getItem("peopleToLike"))[currentIndexOfSwipes].firstname, "dislikedPeople");
+        // dislikedPeople.push(JSON.parse(sessionStorage.getItem("people"))[currentIndexOfSwipes])
     }
     swipeHandler();
 
@@ -125,9 +180,21 @@ dislike.addEventListener('click', (e) => {
 var like = document.getElementById('swipePageLike');
 like.addEventListener('click', (e) => {
     e.preventDefault();
-    if (currentIndexOfSwipes !== JSON.parse(sessionStorage.getItem("people")).length) {
-        addToList(JSON.parse(sessionStorage.getItem("people"))[currentIndexOfSwipes].NameOfPeople, "likedPeople");
-        likedPeople.push(JSON.parse(sessionStorage.getItem("people"))[currentIndexOfSwipes])
+    if (currentIndexOfSwipes !== JSON.parse(sessionStorage.getItem("peopleToLike")).length) {
+        var currentguy = JSON.parse(sessionStorage.getItem("peopleToLike"))[currentIndexOfSwipes];
+        addToList(JSON.parse(sessionStorage.getItem("peopleToLike"))[currentIndexOfSwipes].firstname, "likedPeople");
+        fetch("http://localhost:4040/users/swipe", {
+                "credentials": "omit",
+                "headers": {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0",
+                    "Accept": "application/json",
+                    "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                    "Content-Type": "application/json"
+                },
+                "body": "{\"id1\":" + Number.parseInt(sessionStorage.getItem('user_id')) +", \"id2\":" + Number.parseInt(currentguy.PersonId) +"\}",
+                "method": "POST",
+                "mode": "cors"
+            }).then(response => response.json())
     }
     swipeHandler();
 });
