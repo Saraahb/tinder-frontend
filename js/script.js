@@ -23,7 +23,7 @@ createPageAcccountCreation.addEventListener('click', () => {
     show(createPage);
 });
 
-var BACKEND_URL = location.pathname === "\/C:\/Users\/p51\/Developer\/tinder-frontend\/index.html" ? "http://localhost:4040/" : "https://aqueous-harbor-80633.herokuapp.com/";
+var BACKEND_URL = location.pathname === "\/C:\/Users\/p51\/Developer\/tinder-frontend\/index.html" ? "https://aqueous-harbor-80633.herokuapp.com/";
 
 // CREATEPAGE scripts 
 var registerbutton = document.getElementById('registerbutton');
